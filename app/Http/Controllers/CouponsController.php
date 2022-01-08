@@ -44,7 +44,7 @@ class CouponsController extends Controller
 
         session()->put('coupon', [
             'name' => $coupon->code,
-            'discount' => $coupon->discount(Cart::subtotal()),          // يعني بدنا نشوف قديش بيطلع مبلغ الخصم على حسب الكود
+            'discount' => $coupon->discount(Cart::subtotal()),         
         ]);
 
         return redirect()->route('checkout.index')->with('success', 'Coupon has been applied');
