@@ -60,16 +60,12 @@ class CheckoutController extends Controller
         
         // just get cart contents in string format
         $contents = Cart::content()->map(function($item){
-            return $item->model->id.','.$item->qty;         // بدل الـ id هو بعت الـ name بس أنا لأنه الاسماء بالعربي صارت تطلع بموقع سترايب برموز غريبة غير مقروأة، مشان هيك بعتت الـ id
+            return $item->model->id.','.$item->qty;        
         })->values()->toJson();
         
 
         try {  
-            /*     
-            وقفته بس مشان اقدر اختبر تخزين الـ 
-            order 
-            بقاعدة البيانات
-
+          
             $stripe = new \Stripe\StripeClient('sk_test_51I9tLWGoEG9rrfr09YbWAdmeFrtH8yUudJzixlB97P73NL18FCa4tu1ZP20focCFNVdkE4SIDrRwsuLsDERUVlJJ00v17RBEmI');
             $charge = $stripe->charges->create([
                 'amount' => $this->getBillingValues()->get('newTotal') / 100,
@@ -84,7 +80,7 @@ class CheckoutController extends Controller
                     'discount' => collect(session()->get('coupon'))->toJson,
                 ],                
             ]);
-            */
+        
 
             // $chargeId = $charge['id'];
 
@@ -93,7 +89,7 @@ class CheckoutController extends Controller
             //}
 
             // helper method to insert into orders tables
-            //$this->addToOrdersTables($request, null);           // error = null لأنه المفروض بهي المرحلة تكون تمت العملية بنجاح
+            //$this->addToOrdersTables($request, null);           
             // غيرت شوي بالتابع وخليته يرجعلي الـ order
             // مشان ابعت بعض البيانات منها للايميل
             $order = $this->addToOrdersTables($request, null);            
@@ -103,27 +99,15 @@ class CheckoutController extends Controller
 
             // SUCCESSFUL
             Cart::instance('default')->destroy(); 
-            session()->forget('coupon');            // يعني ما ننسى نحذف الكوبون من الجلسة بعد ما تتم عملية الشراء
+            session()->forget('coupon');          
             return redirect()->route('confirmation.index')->with('success_message', 'Your payment has been successfully accepted');
 
 
         } catch (CardErrorException $e) {
             // Something else happened, completely unrelated to Stripe
-            $this->addToOrdersTables($request, $e.getMessage());        // اذا طلع معنا خطأ، رح نخزن العملية مع رسالة الخطأ اللي طلعت
+            $this->addToOrdersTables($request, $e.getMessage());       
 
             return back()->withErrors('Error! '. $e.getMessage());
-
-            // رحنا على ملفات شرح الـ 
-            // cartalyst
-            // وشفنا شو الـ exceptions 
-            // اللي ممكن يطلعوا، واخترنا تبع الـ card
-            // هادا بيطلع معي اذا كان في مشكلة بالكارد نفسها وكانت 
-            // invalid
-            
-            // ملاحظة: فينا نختبر بطاقة خالصة لحتى نشوف اذا بيطلع لنا هالخطأ.. منلاقي هيك شي بصفحة 
-            //testing 
-            // تبع سترايب.. البطاقة الخالصة رقمها
-            // 4000 0000 0000 0069
 
           }
     }
@@ -179,8 +163,8 @@ class CheckoutController extends Controller
     public function getBillingValues()
     {
         $tax = config('cart.tax') / 100;
-        $discount = session()->get('coupon')['discount'] ?? 0;      // يعني اذا ما في خصم رح يرجع قيمة صفر
-        $code = session()->get('coupon')['name'] ?? null;           // هادا مشان نخزنه بجدول الـ order
+        $discount = session()->get('coupon')['discount'] ?? 0;      
+        $code = session()->get('coupon')['name'] ?? null;          
         $newSubtotal = (Cart::subtotal() - $discount);
         $newTax = $newSubtotal * $tax;
         $newTotal = $newSubtotal + $newTax;
@@ -203,7 +187,7 @@ class CheckoutController extends Controller
     {
         // Insert into orders table
         $order = Order::create([
-            'user_id' => auth()->user() ? auth()->user()->id : null,        // يعني اذا كان المستخدم مسجل دخول منخزن رقمه، واذا كان مو مسجل دخول منخلي رقمه null
+            'user_id' => auth()->user() ? auth()->user()->id : null,     
             'billing_name' => $request->name,
             'billing_email' => $request->email,
             'billing_address' => $request->address,
