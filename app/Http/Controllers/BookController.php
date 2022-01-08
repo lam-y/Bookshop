@@ -30,10 +30,6 @@ class BookController extends Controller
      */
     public function create()
     {
-        // categories
-        // ما في داعي نجيب التصنيفات من قاعدة البيانات، لأنه نحنا هيك هيك جبناهن وعم نبعتهن كل مرة على كل فيو
-        // بتابع بملف AppServiceProvider
-
         return view('books.create');
     }
 
@@ -65,11 +61,11 @@ class BookController extends Controller
             $fileName = time() . '.' . $image->getclientoriginalextension();        // to rename the image with a unique name
             $location = public_path('images/'.$fileName);
 
-            $width = Image::make($image)->width();              // أخدت ابعاد الصورة مشان اختبرها اذا كبيرة صغرها
+            $width = Image::make($image)->width();            
             $height = Image::make($image)->height();
 
             if($width > 300 && $height > 500){
-                Image::make($image)->resize(300, null, function ($constraint) {         // هالحكي أخدته من موقع المكتبة نفسها، بيغيرلي أبعاد الصورة، بيعمل الطول 400 والعرض على حسب النسبة المئوية، بحيث ما تتشوه الصورة
+                Image::make($image)->resize(300, null, function ($constraint) {         
                     $constraint->aspectRatio();
                 })->save($location);            
             }
@@ -117,10 +113,6 @@ class BookController extends Controller
     public function edit($id)
     {
         $book = Book::find($id);
-
-        // categories
-        // كمان ما في داعي، متل ما قلنا بتابع 
-        //create
 
         if(!$book){
             return redirect()->route('/');
