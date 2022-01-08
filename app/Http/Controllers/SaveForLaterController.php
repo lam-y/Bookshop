@@ -107,13 +107,5 @@ class SaveForLaterController extends Controller
 
         return redirect()->route('cart.index')->with('success', 'Book has been moved to cart');
         
-        //ملاحظة
-        // انتبهي الى 
-        //instance('default')->
-        // لأني لما ما كتبتها، وحطيت بس 
-        // cart 
-        // ما نفذ وما اشتغل
-
-        
     }
 }
