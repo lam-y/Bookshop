@@ -46,11 +46,7 @@ class OrderController extends Controller
      */
     public function show(Order $order)
     {
-        /*
-         هي حالة اذا حدا حاول يدخل على صفحة تفاصيل الطلب عن طريق الرابط،
-         يعني تغيير رقم الطلب بالرابط، وبهيك ممكن يدخل لطلب مو إلو ويعرف معلوماته، 
-         هالشي طبعاً غلط، لذلك لازم نتأكد انه المستخدم الحالي هو نفسه المستخدم المسجل بالطلب، يعني بيحقله يشوفه
-         */
+        
         if(auth()->id() !== $order->user_id){      
             return back()->withError('You do not have access to this!');
         }
