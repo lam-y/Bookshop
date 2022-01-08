@@ -36,10 +36,7 @@ class CartController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {
-
-        // بالأول رح نشوف اذا ضايفين هالعنصر من قبل على العربة، لأنه ساعتها ما في داعي نضيفه
-        // التابع موجود متل ما هو بالـ documentation تبع المكتبة
+    {       
         $duplicates = Cart::search(function($cartItem, $rowId) use($request){
             return $cartItem->id === $request->id;
         });
@@ -47,10 +44,7 @@ class CartController extends Controller
         if($duplicates->isNotEmpty()){
             return redirect()->route('cart.index')->with('success', 'Book is already in your cart');
         }
-
-        // شفنا شو المتغيرات المطلوبة بالتابع من 
-        // documentation
-        // المكتبة اللي استعملناها
+      
         Cart::add($request->id, $request->name, 1, $request->price)->associate('App\Book');
 
         return redirect()->route('cart.index')->with('success', 'Book was added to your cart');
@@ -121,16 +115,13 @@ class CartController extends Controller
     }
 
     /** ***********************************************************************************
-     * لتحويل الكتاب من عربة التسوق، الى عربة تانية بتحفظ الكتب اللي بدنا نشتريهن بعدين
      */
     public function switchToSaveForLater($id){
         $book = Cart::get($id);
 
         Cart::remove($id);
 
-        // check for duplicate
-        // يعني نختبر اذا كنا ضايفين العنصر من قبل لقائمة الـ 
-        //saved for later
+        // check for duplicate       
         $duplicates = Cart::instance('savedForLater')->search(function($cartItem, $rowId) use($id){
             return $rowId === $id;
         });
