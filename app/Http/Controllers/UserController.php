@@ -13,11 +13,11 @@ class UserController extends Controller
      */
     public function index()
     {
-        $orders1 = auth()->user()->orders;       // n+1 isseus
+        $orders1 = auth()->user()->orders;       
 
-        $orders = $orders1->reverse();          // مشان اعرضهن من الاحدث للأقدم
+        $orders = $orders1->reverse();          
 
-        //$orders = auth()->user()->orders->with('books')->get()->reverse();       // حل المشكلة السابقة، بس ما فهمتها!
+        //$orders = auth()->user()->orders->with('books')->get()->reverse();      
 
         return view('users.profile')->with(['orders'=> $orders ,
                                             'user'=> auth()->user()]);
@@ -85,7 +85,7 @@ class UserController extends Controller
         $input = $request->except('password', 'password_confirmation');     // because we have to encrept them
 
 
-        if(!$request->filled('password')){      // يعني اذا ترك خانة الباسورد فاضية، يعني ما بده يغيرها
+        if(!$request->filled('password')){       
             $user->fill($input)->save();
 
             return back()->with('success','profile updated successfully');
